@@ -1,6 +1,6 @@
-const PROD_BASE_URL = "https://ecom-store-mern-backend.onrender.com";
-
-export const BASE_URL = import.meta.env.VITE_BACKEND_URL || PROD_BASE_URL; // Vite env fallback
+export const BASE_URL =
+  import.meta.env.VITE_BACKEND_URL ||
+  "https://ecom-store-mern-backend.onrender.com";
 
 export const USERS_URL = `${BASE_URL}/api/users`;
 export const CATEGORY_URL = `${BASE_URL}/api/category`;

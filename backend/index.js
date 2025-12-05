@@ -22,13 +22,13 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://your-frontend.vercel.app"],
+    origin: ["https://ecom-store-mern-nine.vercel.app"],
     credentials: true,
   })
 );
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.send("Hello");
 });
 
 app.use(express.json());
