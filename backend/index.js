@@ -23,7 +23,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173", // Vite dev
   "http://localhost:5000", // Serve static frontend locally
-  // "https://your-frontend.vercel.app", // Production frontend
+  "https://ecom-store-mern-green.vercel.app/", // Production frontend
 ];
 
 app.use(
