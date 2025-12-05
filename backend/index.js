@@ -3,7 +3,7 @@ import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import cors from "cors"
+import cors from "cors";
 
 // Utils
 import connectDB from "./config/db.js";
@@ -22,10 +22,14 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://your-frontend.vercel.app"], 
+    origin: ["https://your-frontend.vercel.app"],
     credentials: true,
   })
 );
+
+app.get("/", (req, res) => {
+  res.send("Hello!");
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
