@@ -22,7 +22,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://ecom-store-mern-nine.vercel.app"],
+    origin: ["https://ecom-store-mern-theta.vercel.app"],
     credentials: true,
   })
 );

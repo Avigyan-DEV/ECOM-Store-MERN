@@ -4,13 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: "/", // important for production
+  base: "/", // Important! Ensures asset paths are correct
   build: {
-    outDir: "dist", // must match Vercel output
+    outDir: "dist", // Vercel output
   },
   server: {
     proxy: {
-      "/api": "http://localhost:5000", // only for local dev
+      "/api": "http://localhost:5000", // local dev only
       "/uploads": "http://localhost:5000",
     },
   },
