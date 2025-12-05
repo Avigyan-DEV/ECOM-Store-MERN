@@ -1,6 +1,7 @@
 export const BASE_URL =
   import.meta.env.VITE_BACKEND_URL ||
-  "https://ecom-store-mern-backend.onrender.com";
+  "https://ecom-store-mern-backend.onrender.com" ||
+  "http://localhost:5000";
 
 export const USERS_URL = `${BASE_URL}/api/users`;
 export const CATEGORY_URL = `${BASE_URL}/api/category`;

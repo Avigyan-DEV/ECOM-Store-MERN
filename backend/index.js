@@ -20,9 +20,15 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173", // Vite dev
+  "http://localhost:5000", // Serve static frontend locally
+  // "https://your-frontend.vercel.app", // Production frontend
+];
+
 app.use(
   cors({
-    origin: ["https://ecom-store-mern-theta.vercel.app"],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
