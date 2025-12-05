@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      "/api/": "https://ecom-store-mern-ten.vercel.app",
-      "/uploads/": "https://ecom-store-mern-ten.vercel.app",
+      "/api/": "http://localhost:5000",
+      "/uploads/": "http://localhost:5000",
     },
   },
 });
