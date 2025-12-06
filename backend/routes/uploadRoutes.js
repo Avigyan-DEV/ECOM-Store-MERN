@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
     } else if (req.file) {
       res.status(200).send({
         message: "Image Uploaded successfully",
-        image: `/${req.file.path}`,
+        image: `https://ecom-store-mern-backend.onrender.com/${req.file.path}`,
       });
     } else {
       res.status(400).send({ message: "No image file provided" });
