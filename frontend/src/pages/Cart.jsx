@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTrash } from "react-icons/fa";
 import { addToCart, removeFromCart } from "../redux/features/cart/cartSlice";
+import { BASE_URL } from "../redux/constants";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -26,7 +27,10 @@ const Cart = () => {
       <div className="container flex justify-around items-start wrap mx-auto mt-8">
         {cartItems.length === 0 ? (
           <div>
-            Your cart is empty, <Link to="/shop" className="underline hover:text-pink-500">Go To Shop</Link>
+            Your cart is empty,{" "}
+            <Link to="/shop" className="underline hover:text-pink-500">
+              Go To Shop
+            </Link>
           </div>
         ) : (
           <>
@@ -37,7 +41,7 @@ const Cart = () => {
                 <div key={item._id} className="flex items-enter mb-4 pb-2">
                   <div className="w-20 h-20">
                     <img
-                      src={item.image}
+                      src={`${BASE_URL}/${item.image}`}
                       alt={item.name}
                       className="w-full h-full object-cover rounded"
                     />
@@ -63,7 +67,11 @@ const Cart = () => {
                       }
                     >
                       {[...Array(item.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1} className="text-black">
+                        <option
+                          key={x + 1}
+                          value={x + 1}
+                          className="text-black"
+                        >
                           {x + 1}
                         </option>
                       ))}

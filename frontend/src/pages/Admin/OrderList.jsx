@@ -3,6 +3,7 @@ import Loader from "../../components/Loader";
 import { Link } from "react-router-dom";
 import { useGetOrdersQuery } from "../../redux/api/orderApiSlice";
 import AdminMenu from "./AdminMenu";
+import { BASE_URL } from "../../redux/constants";
 
 const OrderList = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
@@ -37,7 +38,7 @@ const OrderList = () => {
               <tr key={order._id}>
                 <td>
                   <img
-                    src={order.orderItems[0].image}
+                    src={`${order.orderItems[0].BASE_URL / image}`}
                     alt={order._id}
                     className="w-20 pt-4"
                   />

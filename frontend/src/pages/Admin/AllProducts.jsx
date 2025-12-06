@@ -3,6 +3,7 @@ import moment from "moment";
 import { useAllProductsQuery } from "../../redux/api/productApiSlice";
 import AdminMenu from "./AdminMenu";
 import Loader from "../../components/Loader";
+import { BASE_URL } from "../../redux/constants";
 
 const AllProducts = () => {
   const { data: products, isLoading, isError } = useAllProductsQuery();
@@ -30,7 +31,7 @@ const AllProducts = () => {
               >
                 <div className="flex">
                   <img
-                    src={product.image}
+                    src={`${BASE_URL}/${product.image}`}
                     alt={product.name}
                     className="w-40 object-cover"
                   />
@@ -81,7 +82,7 @@ const AllProducts = () => {
         </div>
 
         <div className="md:w-1/4 p-3 mt-2">
-            <AdminMenu />
+          <AdminMenu />
         </div>
       </div>
     </div>

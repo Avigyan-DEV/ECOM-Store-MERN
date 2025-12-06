@@ -20,6 +20,7 @@ import moment from "moment";
 import HeartIcon from "./HeartIcon";
 import Ratings from "./Ratings";
 import ProductTabs from "./ProductTabs";
+import { BASE_URL } from "../../redux/constants";
 
 const ProductDetails = () => {
   const { id: productId } = useParams();
@@ -81,7 +82,7 @@ const ProductDetails = () => {
           <div className="flex flex-wrap relative items-between mt-8 ml-40">
             <div>
               <img
-                src={product.image}
+                src={BASE_URL / product.image}
                 alt={product.name}
                 className="w-full xl:w-200 lg:w-180 md:w-120 sm:w-[20rem] mr-8"
               />

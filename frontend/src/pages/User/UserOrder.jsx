@@ -2,6 +2,7 @@ import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { Link } from "react-router-dom";
 import { useGetMyOrdersQuery } from "../../redux/api/orderApiSlice";
+import { BASE_URL } from "../../redux/constants";
 
 const UserOrder = () => {
   const { data: orders, isLoading, error } = useGetMyOrdersQuery();
@@ -32,7 +33,7 @@ const UserOrder = () => {
             {orders.map((order) => (
               <tr key={order._id}>
                 <img
-                  src={order.orderItems[0].image}
+                  src={BASE_URL / order.orderItems[0].image}
                   alt={order.user}
                   className="w-24 mb-5"
                 />
