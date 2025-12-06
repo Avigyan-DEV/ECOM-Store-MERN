@@ -67,7 +67,7 @@ const PlaceOrder = () => {
                   <tr key={index}>
                     <td className="p-2">
                       <img
-                        src={BASE_URL / item.image}
+                        src={`${BASE_URL} / ${item.image}`}
                         alt={item.name}
                         className="w-16 h-16 object-cover"
                       />
