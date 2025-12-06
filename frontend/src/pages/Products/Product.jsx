@@ -3,6 +3,8 @@ import HeartIcon from "./HeartIcon";
 import { BASE_URL } from "../../redux/constants";
 
 const Product = ({ product }) => {
+  console.log(product.image);
+
   return (
     <div className="w-120 ml-8 p-3 relative">
       <div className="relative">
