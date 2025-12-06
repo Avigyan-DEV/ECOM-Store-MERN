@@ -5,7 +5,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: ({ keyword }) => ({
-        url: `${PRODUCT_URL}`,
+        url: `https://ecom-store-mern-backend.onrender.com/${PRODUCT_URL}`,
         params: { keyword },
       }),
       keepUnusedDataFor: 5,
