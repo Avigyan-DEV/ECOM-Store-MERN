@@ -8,7 +8,7 @@ import Product from "./Products/Product";
 const Home = () => {
   const { keyword } = useParams();
   const { data, isLoading, isError } = useGetProductsQuery({ keyword });
-  console.log(data.products.image);
+  console.log(data);
 
   return (
     <>
