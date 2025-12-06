@@ -5,7 +5,7 @@ const Product = ({ product }) => {
   return (
     <div className="w-120 ml-8 p-3 relative">
       <div className="relative">
-        <img src={product.image} alt={product.name} className="w-120 rounded" />
+        <img src={`https://ecom-store-mern-backend.onrender.com${product.image}`} alt={product.name} className="w-120 rounded" />
         <HeartIcon product={product} />
       </div>
 
