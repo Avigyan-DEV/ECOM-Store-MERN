@@ -9,49 +9,21 @@ import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
 
 const ProductList = () => {
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null); // for UI filename
+  const [imageUrl, setImageUrl] = useState(""); // Cloudinary URL
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState(null);
+  const [category, setCategory] = useState("");
   const [quantity, setQuantity] = useState("");
   const [brand, setBrand] = useState("");
   const [stock, setStock] = useState(0);
-  const [imageUrl, setImageUrl] = useState(null);
+
   const navigate = useNavigate();
 
   const [uploadProductImage] = useUploadProductImageMutation();
   const [createProduct] = useCreateProductMutation();
   const { data: categories } = useFetchCategoriesQuery();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const productData = {
-        name,
-        description,
-        price: Number(price),
-        category,
-        quantity: Number(quantity),
-        brand,
-        countInStock: Number(stock),
-        image: imageUrl, // send Cloudinary URL, not file
-      };
-
-      const { data } = await createProduct(productData);
-
-      if (data.error) {
-        toast.error("Product create failed. Try Again.");
-      } else {
-        toast.success(`${data.name} is created`);
-        navigate("/");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Product create failed. Try Again.");
-    }
-  };
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
@@ -62,11 +34,45 @@ const ProductList = () => {
 
     try {
       const res = await uploadProductImage(formData).unwrap();
-      toast.success(res.message);
-      setImage(file); // store file for UI filename display
-      setImageUrl(res.image); // store Cloudinary URL for backend
+      setImage(file); // display filename
+      setImageUrl(res.image); // display Cloudinary image
+      toast.success(res.message || "Image uploaded successfully");
     } catch (error) {
-      toast.error(error?.data?.message || error.error);
+      toast.error(error?.data?.message || error.error || "Image upload failed");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!imageUrl) {
+      toast.error("Please upload an image first");
+      return;
+    }
+
+    try {
+      const productData = {
+        name,
+        description,
+        price: Number(price),
+        category,
+        quantity: Number(quantity),
+        brand,
+        countInStock: Number(stock),
+        image: imageUrl, // Cloudinary URL
+      };
+
+      const { data } = await createProduct(productData);
+
+      if (data.error) {
+        toast.error("Product creation failed. Try again.");
+      } else {
+        toast.success(`${data.name} is created`);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Product creation failed. Try again.");
     }
   };
 
@@ -75,18 +81,20 @@ const ProductList = () => {
       <div className="flex flex-col md:flex-row">
         <AdminMenu />
         <div className="md:w-3/4 p-3">
-          <div className="h-12">Create Product</div>
+          <div className="h-12 text-2xl font-semibold mb-4">Create Product</div>
 
+          {/* Preview Uploaded Image */}
           {imageUrl && (
-            <div className="text-center">
+            <div className="text-center mb-5">
               <img
                 src={imageUrl}
                 alt="product"
-                className="block mx-auto max-h-[200px]"
+                className="block mx-auto max-h-[200px] rounded-lg object-cover"
               />
             </div>
           )}
 
+          {/* Image Upload */}
           <div className="mb-3">
             <label className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
               {image ? image.name : "Upload Image"}
@@ -111,8 +119,8 @@ const ProductList = () => {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className="two ml-10 ">
-                <label htmlFor="name block">Price</label> <br />
+              <div className="two ml-10">
+                <label htmlFor="price">Price</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -121,9 +129,10 @@ const ProductList = () => {
                 />
               </div>
             </div>
+
             <div className="flex flex-wrap">
               <div className="one">
-                <label htmlFor="name block">Quantity</label> <br />
+                <label htmlFor="quantity">Quantity</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -131,8 +140,8 @@ const ProductList = () => {
                   onChange={(e) => setQuantity(e.target.value)}
                 />
               </div>
-              <div className="two ml-10 ">
-                <label htmlFor="name block">Brand</label> <br />
+              <div className="two ml-10">
+                <label htmlFor="brand">Brand</label> <br />
                 <input
                   type="text"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -142,7 +151,7 @@ const ProductList = () => {
               </div>
             </div>
 
-            <label htmlFor="" className="my-5">
+            <label htmlFor="description" className="my-5 block">
               Description
             </label>
             <textarea
@@ -152,11 +161,11 @@ const ProductList = () => {
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between flex-wrap">
               <div>
-                <label htmlFor="name block">Count In Stock</label> <br />
+                <label htmlFor="stock">Count In Stock</label> <br />
                 <input
-                  type="text"
+                  type="number"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
                   value={stock}
                   onChange={(e) => setStock(e.target.value)}
@@ -166,7 +175,7 @@ const ProductList = () => {
               <div>
                 <label htmlFor="category">Category</label> <br />
                 <select
-                  value={category ?? ""}
+                  value={category}
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
                   onChange={(e) => setCategory(e.target.value)}
                 >
