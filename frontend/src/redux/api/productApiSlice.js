@@ -1,35 +1,38 @@
+import { PRODUCT_URL, UPLOAD_URL } from "../constants";
 import { apiSlice } from "./apiSlice";
 
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: ({ keyword }) => ({
-        url: `/api/products`,
+        url: `${PRODUCT_URL}`,
         params: { keyword },
       }),
       keepUnusedDataFor: 5,
-      providesTags: ["Product"],
+      providesTags: ["Products"],
     }),
 
     getProductById: builder.query({
-      query: (productId) => `/api/products/${productId}`,
+      query: (productId) => `${PRODUCT_URL}/${productId}`,
       providesTags: (result, error, productId) => [
         { type: "Product", id: productId },
       ],
     }),
 
     allProducts: builder.query({
-      query: () => `/api/products/allProducts`,
+      query: () => `${PRODUCT_URL}/allProducts`,
     }),
 
     getProductDetails: builder.query({
-      query: (productId) => `/api/products/${productId}`,
+      query: (productId) => ({
+        url: `${PRODUCT_URL}/${productId}`,
+      }),
       keepUnusedDataFor: 5,
     }),
 
     createProduct: builder.mutation({
       query: (productData) => ({
-        url: `/api/products`,
+        url: `${PRODUCT_URL}`,
         method: "POST",
         body: productData,
       }),
@@ -38,49 +41,49 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     updateProduct: builder.mutation({
       query: ({ productId, formData }) => ({
-        url: `/api/products/${productId}`,
+        url: `${PRODUCT_URL}/${productId}`,
         method: "PUT",
         body: formData,
       }),
     }),
 
     uploadProductImage: builder.mutation({
-      query: (formData) => ({
-        url: `/api/upload`,
+      query: (data) => ({
+        url: `${UPLOAD_URL}`,
         method: "POST",
-        body: formData,
+        body: data,
       }),
     }),
 
     deleteProduct: builder.mutation({
       query: (productId) => ({
-        url: `/api/products/${productId}`,
+        url: `${PRODUCT_URL}/${productId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Product"],
+      providesTags: ["Product"],
     }),
 
     createReview: builder.mutation({
       query: (data) => ({
-        url: `/api/products/${data.productId}/reviews`,
+        url: `${PRODUCT_URL}/${data.productId}/reviews`,
         method: "POST",
         body: data,
       }),
     }),
 
     getTopProducts: builder.query({
-      query: () => `/api/products/top`,
+      query: () => `${PRODUCT_URL}/top`,
       keepUnusedDataFor: 5,
     }),
 
     getNewProducts: builder.query({
-      query: () => `/api/products/new`,
+      query: () => `${PRODUCT_URL}/new`,
       keepUnusedDataFor: 5,
     }),
 
     getFilteredProducts: builder.query({
       query: ({ checked, radio }) => ({
-        url: `/api/products/filtered-products`,
+        url: `${PRODUCT_URL}/filtered-products`,
         method: "POST",
         body: { checked, radio },
       }),
