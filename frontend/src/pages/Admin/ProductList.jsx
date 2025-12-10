@@ -52,24 +52,23 @@ const ProductList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!imageUrl) {
-      toast.error("Please upload an image first");
+    if (!image) {
+      toast.error("Please select an image first");
       return;
     }
 
     try {
-      const productData = {
-        name,
-        description,
-        price: Number(price),
-        category,
-        quantity: Number(quantity),
-        brand,
-        countInStock: Number(stock),
-        image: imageUrl, // Cloudinary URL as string
-      };
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("category", category);
+      formData.append("quantity", quantity);
+      formData.append("brand", brand);
+      formData.append("countInStock", stock);
+      formData.append("image", image); // **actual File object**
 
-      const result = await createProduct(productData).unwrap();
+      const result = await createProduct(formData).unwrap();
 
       toast.success(`${result.name} is created`);
       navigate("/");
