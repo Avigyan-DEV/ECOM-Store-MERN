@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
 
 const ProductList = () => {
-  const [image, setImage] = useState(null); // for filename display
+  const [image, setImage] = useState(null); // filename display
   const [imageUrl, setImageUrl] = useState(""); // Cloudinary URL
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -33,8 +33,6 @@ const ProductList = () => {
 
     try {
       const res = await uploadProductImage(formData).unwrap();
-
-      // Check the actual response structure from backend
       const uploadedImageUrl = res.image || res.data?.image || null;
 
       if (!uploadedImageUrl) {
@@ -42,8 +40,8 @@ const ProductList = () => {
         return;
       }
 
-      setImage(file); // display filename
-      setImageUrl(uploadedImageUrl); // store Cloudinary URL for submit
+      setImage(file);
+      setImageUrl(uploadedImageUrl); // store Cloudinary URL
       toast.success(res.message || "Image uploaded successfully");
     } catch (error) {
       console.error(error);
@@ -60,36 +58,27 @@ const ProductList = () => {
     }
 
     try {
-      const productData = {
-        name,
-        description,
-        price: Number(price),
-        category,
-        quantity: Number(quantity),
-        brand,
-        countInStock: Number(stock),
-        image: imageUrl,
-      };
+      // Convert product data to FormData
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("category", category);
+      formData.append("quantity", quantity);
+      formData.append("brand", brand);
+      formData.append("countInStock", stock);
+      formData.append("image", imageUrl); // Cloudinary URL as string
 
-      const result = await createProduct(productData);
+      // Send FormData
+      const result = await createProduct(formData).unwrap();
 
-      console.log("Create product result:", result); // 🔹 log full response
-
-      if (result.error) {
-        // Backend error returned
-        console.error("Backend error:", result.error);
-        toast.error(
-          result.error.data?.message ||
-            result.error.status ||
-            "Product creation failed"
-        );
-      } else if (result.data) {
-        toast.success(`${result.data.name} is created`);
-        navigate("/"); // redirect after creation
-      }
-    } catch (err) {
-      console.error("Catch error:", err);
-      toast.error("Product creation failed. Try again.");
+      toast.success(`${result.name} is created`);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error?.data?.message || "Product creation failed. Try again."
+      );
     }
   };
 
