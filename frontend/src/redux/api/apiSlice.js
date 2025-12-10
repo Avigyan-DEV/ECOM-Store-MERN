@@ -1,16 +1,26 @@
 import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
+import { store } from "../redux/store"; // import your store
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL, // e.g., https://ecom-store-mern-backend.onrender.com
-    // credentials: "include", // include cookies if your backend uses sessions
+    baseUrl: BASE_URL,
+    credentials: "include",
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
+
+      // Get token from Redux store (adjust path if different)
+      const state = store.getState();
+      const token = state.auth.user?.token;
+
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+
       return headers;
     },
   }),
   tagTypes: ["Product", "Order", "User", "Category"],
-  endpoints: () => ({}), // endpoints injected in other slices
+  endpoints: () => ({}),
 });
