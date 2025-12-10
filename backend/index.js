@@ -2,6 +2,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors"; // ✅ add cors
 
 // Utils / Routes
 import connectDB from "./config/db.js";
@@ -24,6 +25,19 @@ connectDB()
     console.error("MongoDB connection failed:", err.message);
     process.exit(1); // Stop server if DB connection fails
   });
+
+// CORS configuration
+const allowedOrigins = [
+  "http://localhost:5173", // local frontend (Vite)
+  "https://ecom-store-mern-backend.onrender.com", // replace with your Render frontend URL
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // allow cookies
+  })
+);
 
 // Middleware
 app.use(express.json());
