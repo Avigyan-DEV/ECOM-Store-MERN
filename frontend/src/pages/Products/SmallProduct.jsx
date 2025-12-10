@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import HeartIcon from "./HeartIcon";
-import { BASE_URL } from "../../redux/constants";
 
 const SmallProduct = ({ product }) => {
   return (
     <div className="w-[20rem] ml-8 p-3">
       <div className="relative">
         <img
-          src={BASE_URL / product.image}
+          src={product.image} // ✅ fixed: use full URL directly
           alt={product.name}
           className="h-auto rounded"
         />
@@ -27,4 +26,5 @@ const SmallProduct = ({ product }) => {
     </div>
   );
 };
+
 export default SmallProduct;

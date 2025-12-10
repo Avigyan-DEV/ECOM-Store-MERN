@@ -11,10 +11,9 @@ import {
   FaStar,
   FaStore,
 } from "react-icons/fa";
-import { BASE_URL } from "../../redux/constants";
 
 const ProductCarousel = () => {
-  const { data: products, isLoading, error } = useGetTopProductsQuery();
+  const { data: products = [], isLoading, error } = useGetTopProductsQuery();
 
   const settings = {
     dots: false,
@@ -54,7 +53,7 @@ const ProductCarousel = () => {
             }) => (
               <div key={_id}>
                 <img
-                  src={BASE_URL / image}
+                  src={image} // ✅ Use full Cloudinary URL
                   alt={name}
                   className="w-full rounded-lg object-cover h-120"
                 />
@@ -62,8 +61,9 @@ const ProductCarousel = () => {
                 <div className="flex justify-between w-[20rem]">
                   <div className="one">
                     <h2>{name}</h2>
-                    <p>$ {price}</p> <br /> <br />
-                    <p className="w-100">{description.substring(0, 170)}...</p>
+                    <p>$ {price}</p>
+                    <br />
+                    <p className="w-100">{description?.substring(0, 170)}...</p>
                   </div>
 
                   <div className="flex justify-between w-[20rem]">
@@ -105,4 +105,5 @@ const ProductCarousel = () => {
     </div>
   );
 };
+
 export default ProductCarousel;

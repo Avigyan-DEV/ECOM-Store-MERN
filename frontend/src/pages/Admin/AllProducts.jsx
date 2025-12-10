@@ -3,7 +3,6 @@ import moment from "moment";
 import { useAllProductsQuery } from "../../redux/api/productApiSlice";
 import AdminMenu from "./AdminMenu";
 import Loader from "../../components/Loader";
-import { BASE_URL } from "../../redux/constants";
 
 const AllProducts = () => {
   const { data: products, isLoading, isError } = useAllProductsQuery();
@@ -31,7 +30,7 @@ const AllProducts = () => {
               >
                 <div className="flex">
                   <img
-                    src={`${BASE_URL}/${product.image}`}
+                    src={product.image} // Cloudinary URL is already full URL
                     alt={product.name}
                     className="w-40 object-cover"
                   />
@@ -42,7 +41,7 @@ const AllProducts = () => {
                       </h5>
 
                       <p className="text-gray-400 text-sm">
-                        {moment(product.createAt).format("MMMM Do YYYY")}
+                        {moment(product.createdAt).format("MMMM Do YYYY")}
                       </p>
                     </div>
 

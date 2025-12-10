@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 import HeartIcon from "./HeartIcon";
-import { BASE_URL } from "../../redux/constants";
 
 const Product = ({ product }) => {
-  console.log(product.image);
-
   return (
     <div className="w-120 ml-8 p-3 relative">
       <div className="relative">
         <img
-          src={BASE_URL / product.image}
+          src={product.image} // ✅ Cloudinary URL is full
           alt={product.name}
           className="w-120 rounded"
         />
@@ -29,4 +26,5 @@ const Product = ({ product }) => {
     </div>
   );
 };
+
 export default Product;

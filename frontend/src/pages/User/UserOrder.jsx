@@ -2,14 +2,13 @@ import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { Link } from "react-router-dom";
 import { useGetMyOrdersQuery } from "../../redux/api/orderApiSlice";
-import { BASE_URL } from "../../redux/constants";
 
 const UserOrder = () => {
   const { data: orders, isLoading, error } = useGetMyOrdersQuery();
 
   return (
     <div className="container mx-auto">
-      <h2 className="text-2xl font-semibold mb-4">My Orders </h2>
+      <h2 className="text-2xl font-semibold mb-4">My Orders</h2>
 
       {isLoading ? (
         <Loader />
@@ -32,14 +31,18 @@ const UserOrder = () => {
           <tbody>
             {orders.map((order) => (
               <tr key={order._id}>
-                <img
-                  src={BASE_URL / order.orderItems[0].image}
-                  alt={order.user}
-                  className="w-24 mb-5"
-                />
+                <td className="py-2">
+                  <img
+                    src={order.orderItems[0].image} // ✅ Cloudinary URL
+                    alt={order.user?.username || "order item"}
+                    className="w-24 mb-5"
+                  />
+                </td>
 
                 <td className="py-2">{order._id}</td>
-                <td className="py-2">{order.createdAt.substring(0, 10)}</td>
+                <td className="py-2">
+                  {order.createdAt ? order.createdAt.substring(0, 10) : "N/A"}
+                </td>
                 <td className="py-2">$ {order.totalPrice}</td>
 
                 <td className="py-2">
@@ -68,7 +71,7 @@ const UserOrder = () => {
 
                 <td className="px-2 py-2">
                   <Link to={`/order/${order._id}`}>
-                    <button className="bg-pink-400 text-back py-2 px-3 rounded">
+                    <button className="bg-pink-400 text-black py-2 px-3 rounded">
                       View Details
                     </button>
                   </Link>

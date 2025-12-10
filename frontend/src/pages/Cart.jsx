@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTrash } from "react-icons/fa";
 import { addToCart, removeFromCart } from "../redux/features/cart/cartSlice";
-import { BASE_URL } from "../redux/constants";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -38,10 +37,10 @@ const Cart = () => {
               <h1 className="text-2xl font-semibold mb-4">Shopping Cart</h1>
 
               {cartItems.map((item) => (
-                <div key={item._id} className="flex items-enter mb-4 pb-2">
+                <div key={item._id} className="flex items-center mb-4 pb-2">
                   <div className="w-20 h-20">
                     <img
-                      src={`${BASE_URL}/${item.image}`}
+                      src={item.image} // Cloudinary URL is already full URL
                       alt={item.name}
                       className="w-full h-full object-cover rounded"
                     />
@@ -82,6 +81,7 @@ const Cart = () => {
                     <button
                       className="text-red-500 mr-20"
                       onClick={() => removeFromCartHandler(item._id)}
+                      aria-label={`Remove ${item.name} from cart`}
                     >
                       <FaTrash className="ml-4 mt-2" />
                     </button>

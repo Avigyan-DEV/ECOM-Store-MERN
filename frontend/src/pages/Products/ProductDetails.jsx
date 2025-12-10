@@ -20,7 +20,6 @@ import moment from "moment";
 import HeartIcon from "./HeartIcon";
 import Ratings from "./Ratings";
 import ProductTabs from "./ProductTabs";
-import { BASE_URL } from "../../redux/constants";
 
 const ProductDetails = () => {
   const { id: productId } = useParams();
@@ -82,11 +81,10 @@ const ProductDetails = () => {
           <div className="flex flex-wrap relative items-between mt-8 ml-40">
             <div>
               <img
-                src={BASE_URL / product.image}
+                src={product.image} // ✅ fixed URL
                 alt={product.name}
                 className="w-full xl:w-200 lg:w-180 md:w-120 sm:w-[20rem] mr-8"
               />
-
               <HeartIcon product={product} />
             </div>
 
@@ -106,7 +104,7 @@ const ProductDetails = () => {
                   </h1>
                   <h1 className="flex items-center mb-6 w-[20rem]">
                     <FaClock className="mr-2 text-white" /> Added:{" "}
-                    {moment(product.createAt).fromNow()}
+                    {moment(product.createdAt).fromNow()}
                   </h1>
                   <h1 className="flex items-center mb-6">
                     <FaStar className="mr-2 text-white" /> Reviews:{" "}
@@ -116,7 +114,8 @@ const ProductDetails = () => {
 
                 <div className="two">
                   <h1 className="flex items-center mb-6">
-                    <FaStar className="mr-2 text-white" /> Ratings: {rating}
+                    <FaStar className="mr-2 text-white" /> Ratings:{" "}
+                    {product.rating}
                   </h1>
                   <h1 className="flex items-center mb-6">
                     <FaShoppingCart className="mr-2 text-white" /> Quantity:{" "}
@@ -185,4 +184,5 @@ const ProductDetails = () => {
     </>
   );
 };
+
 export default ProductDetails;
