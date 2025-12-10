@@ -1,89 +1,103 @@
-import { PRODUCT_URL, UPLOAD_URL } from "../constants";
+import { BASE_URL, PRODUCT_URL, UPLOAD_URL } from "../constants";
 import { apiSlice } from "./apiSlice";
 
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    // Get products with optional search keyword
     getProducts: builder.query({
       query: ({ keyword }) => ({
-        url: `https://ecom-store-mern-backend.onrender.com/${PRODUCT_URL}`,
+        url: `${BASE_URL}/${PRODUCT_URL}`,
         params: { keyword },
       }),
       keepUnusedDataFor: 5,
       providesTags: ["Products"],
     }),
 
+    // Get product by ID
     getProductById: builder.query({
-      query: (productId) => `${PRODUCT_URL}/${productId}`,
+      query: (productId) => ({
+        url: `${BASE_URL}/${PRODUCT_URL}/${productId}`,
+      }),
       providesTags: (result, error, productId) => [
         { type: "Product", id: productId },
       ],
     }),
 
+    // Get all products
     allProducts: builder.query({
-      query: () => `${PRODUCT_URL}/allProducts`,
+      query: () => `${BASE_URL}/${PRODUCT_URL}/allProducts`,
     }),
 
+    // Get product details (duplicate of getProductById, optional)
     getProductDetails: builder.query({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/${productId}`,
+        url: `${BASE_URL}/${PRODUCT_URL}/${productId}`,
       }),
       keepUnusedDataFor: 5,
     }),
 
+    // Create new product
     createProduct: builder.mutation({
       query: (productData) => ({
-        url: `${PRODUCT_URL}`,
+        url: `${BASE_URL}/${PRODUCT_URL}`,
         method: "POST",
         body: productData,
       }),
       invalidatesTags: ["Product"],
     }),
 
+    // Update product
     updateProduct: builder.mutation({
       query: ({ productId, formData }) => ({
-        url: `${PRODUCT_URL}/${productId}`,
+        url: `${BASE_URL}/${PRODUCT_URL}/${productId}`,
         method: "PUT",
         body: formData,
       }),
     }),
 
+    // Upload product image
     uploadProductImage: builder.mutation({
       query: (formData) => ({
-        url: "/upload",
+        url: `${BASE_URL}/${UPLOAD_URL}`, // full backend URL
         method: "POST",
         body: formData,
       }),
     }),
 
+    // Delete product
     deleteProduct: builder.mutation({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/${productId}`,
+        url: `${BASE_URL}/${PRODUCT_URL}/${productId}`,
         method: "DELETE",
       }),
-      providesTags: ["Product"],
+      invalidatesTags: ["Product"],
     }),
 
+    // Create review for a product
     createReview: builder.mutation({
       query: (data) => ({
-        url: `${PRODUCT_URL}/${data.productId}/reviews`,
+        url: `${BASE_URL}/${PRODUCT_URL}/${data.productId}/reviews`,
         method: "POST",
         body: data,
       }),
     }),
 
+    // Get top products
     getTopProducts: builder.query({
-      query: () => `${PRODUCT_URL}/top`,
+      query: () => `${BASE_URL}/${PRODUCT_URL}/top`,
       keepUnusedDataFor: 5,
     }),
 
+    // Get new products
     getNewProducts: builder.query({
-      query: () => `${PRODUCT_URL}/new`,
+      query: () => `${BASE_URL}/${PRODUCT_URL}/new`,
       keepUnusedDataFor: 5,
     }),
 
+    // Get filtered products
     getFilteredProducts: builder.query({
       query: ({ checked, radio }) => ({
-        url: `${PRODUCT_URL}/filtered-products`,
+        url: `${BASE_URL}/${PRODUCT_URL}/filtered-products`,
         method: "POST",
         body: { checked, radio },
       }),
