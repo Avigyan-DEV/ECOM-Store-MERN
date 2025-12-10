@@ -33,19 +33,22 @@ const ProductList = () => {
 
     try {
       const res = await uploadProductImage(formData).unwrap();
-      const uploadedImageUrl = res.image || res.data?.image || null;
+
+      const uploadedImageUrl = res?.image || res?.data?.image || null;
 
       if (!uploadedImageUrl) {
-        toast.error("Upload failed. Try again.");
+        toast.error(res?.message || "Upload failed. Try again.");
         return;
       }
 
       setImage(file);
-      setImageUrl(uploadedImageUrl); // store Cloudinary URL
+      setImageUrl(uploadedImageUrl);
       toast.success(res.message || "Image uploaded successfully");
     } catch (error) {
-      console.error(error);
-      toast.error(error?.data?.message || error.error || "Image upload failed");
+      console.error("Image upload error:", error);
+      toast.error(
+        error?.data?.message || error?.error || "Image upload failed"
+      );
     }
   };
 
@@ -53,7 +56,7 @@ const ProductList = () => {
     e.preventDefault();
 
     if (!image) {
-      toast.error("Please select an image first");
+      toast.error("Please upload an image first");
       return;
     }
 
@@ -66,7 +69,7 @@ const ProductList = () => {
       formData.append("quantity", quantity);
       formData.append("brand", brand);
       formData.append("countInStock", stock);
-      formData.append("image", image); // **actual File object**
+      formData.append("image", image); // <-- Send actual File object
 
       const result = await createProduct(formData).unwrap();
 
