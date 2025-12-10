@@ -1,16 +1,12 @@
-// Base URLs
-export const BASE_URL =
-  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
-export const API_PREFIX = "/api";
-export const API_URL = `${BASE_URL}${API_PREFIX}`;
+export const BASE_URL = import.meta.env.VITE_BACKEND_URL
+  ? import.meta.env.VITE_BACKEND_URL
+  : process.env.NODE_ENV === "development"
+  ? "http://localhost:5000"
+  : "https://ecom-store-mern-backend.onrender.com";
 
-// API endpoints
-export const USERS_URL = `${API_URL}/users`;
-export const CATEGORY_URL = `${API_URL}/category`;
-export const PRODUCT_URL = `${API_URL}/products`;
-export const UPLOAD_URL = `${API_URL}/upload`;
-export const ORDERS_URL = `${API_URL}/orders`;
-export const PAYPAL_URL = `${API_URL}/config/paypal`;
-
-// Optional: helper function for dynamic product URLs
-export const PRODUCT_DETAIL_URL = (id) => `${PRODUCT_URL}/${id}`;
+export const USERS_URL = "/api/users";
+export const CATEGORY_URL = "/api/category";
+export const PRODUCT_URL = "/api/products";
+export const UPLOAD_URL = "/api/upload";
+export const ORDERS_URL = "/api/orders";
+export const PAYPAL_URL = "/api/config/paypal";
