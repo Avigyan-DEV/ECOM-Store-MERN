@@ -34,25 +34,21 @@ const upload = multer({
 // POST: Upload image
 router.post("/", upload.single("image"), (req, res) => {
   if (!req.file) {
-    return res
-      .status(400)
-      .json({ success: false, message: "No file uploaded" });
+    return res.status(400).json({ message: "No file uploaded" });
   }
 
   return res.status(200).json({
-    success: true,
     message: "Image uploaded successfully",
-    imageUrl: req.file.path, // secure cloud URL
-    publicId: req.file.filename, // used for future delete
+    image: req.file.path, // ✅ Cloudinary secure URL
   });
 });
 
 // Multer error handling middleware
 router.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
-    return res.status(400).json({ success: false, message: err.message });
+    return res.status(400).json({ message: err.message });
   } else if (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({ message: err.message });
   }
   next();
 });
