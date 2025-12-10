@@ -22,7 +22,7 @@ import { checkId } from "../middlewares/checkId.js";
 router
   .route("/")
   .get(fetchProducts)
-  .post(authenticate, authorizeAdmin, ExpressFormidable(), addProduct);
+  .post(authenticate, authorizeAdmin, addProduct);
 router.route("/allproducts").get(fetchAllProducts);
 router.route("/:id/reviews").post(authenticate, checkId, addProductReview);
 router.get("/top", fetchTopProducts);

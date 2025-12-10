@@ -58,19 +58,18 @@ const ProductList = () => {
     }
 
     try {
-      // Convert product data to FormData
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("description", description);
-      formData.append("price", price);
-      formData.append("category", category);
-      formData.append("quantity", quantity);
-      formData.append("brand", brand);
-      formData.append("countInStock", stock);
-      formData.append("image", image); // Cloudinary URL as string
+      const productData = {
+        name,
+        description,
+        price: Number(price),
+        category,
+        quantity: Number(quantity),
+        brand,
+        countInStock: Number(stock),
+        image: imageUrl, // Cloudinary URL as string
+      };
 
-      // Send FormData
-      const result = await createProduct(formData).unwrap();
+      const result = await createProduct(productData).unwrap();
 
       toast.success(`${result.name} is created`);
       navigate("/");
