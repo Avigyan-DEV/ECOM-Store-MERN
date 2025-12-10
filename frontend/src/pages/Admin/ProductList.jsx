@@ -71,16 +71,24 @@ const ProductList = () => {
         image: imageUrl,
       };
 
-      const { data } = await createProduct(productData);
+      const result = await createProduct(productData);
 
-      if (data.error) {
-        toast.error("Product creation failed. Try again.");
-      } else {
-        toast.success(`${data.name} is created`);
+      console.log("Create product result:", result); // 🔹 log full response
+
+      if (result.error) {
+        // Backend error returned
+        console.error("Backend error:", result.error);
+        toast.error(
+          result.error.data?.message ||
+            result.error.status ||
+            "Product creation failed"
+        );
+      } else if (result.data) {
+        toast.success(`${result.data.name} is created`);
         navigate("/"); // redirect after creation
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("Catch error:", err);
       toast.error("Product creation failed. Try again.");
     }
   };
