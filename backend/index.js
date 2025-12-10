@@ -29,7 +29,7 @@ connectDB()
 // CORS configuration
 const allowedOrigins = [
   "http://localhost:5173", // local frontend (Vite)
-  "https://ecom-store-navy.vercel.app", // replace with your Render frontend URL
+  "https://ecom-store-navy.vercel.app", // Vercel frontend
 ];
 
 app.use(
