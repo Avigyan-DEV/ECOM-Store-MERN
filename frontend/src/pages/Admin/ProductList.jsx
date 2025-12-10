@@ -67,7 +67,7 @@ const ProductList = () => {
       formData.append("quantity", quantity);
       formData.append("brand", brand);
       formData.append("countInStock", stock);
-      formData.append("image", imageUrl); // Cloudinary URL as string
+      formData.append("image", image); // Cloudinary URL as string
 
       // Send FormData
       const result = await createProduct(formData).unwrap();
