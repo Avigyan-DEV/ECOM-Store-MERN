@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
 
 const ProductList = () => {
-  const [image, setImage] = useState(null); // for UI filename
+  const [image, setImage] = useState(null); // for filename display
   const [imageUrl, setImageUrl] = useState(""); // Cloudinary URL
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -20,7 +20,6 @@ const ProductList = () => {
   const [stock, setStock] = useState(0);
 
   const navigate = useNavigate();
-
   const [uploadProductImage] = useUploadProductImageMutation();
   const [createProduct] = useCreateProductMutation();
   const { data: categories } = useFetchCategoriesQuery();
@@ -34,10 +33,20 @@ const ProductList = () => {
 
     try {
       const res = await uploadProductImage(formData).unwrap();
+
+      // Check the actual response structure from backend
+      const uploadedImageUrl = res.image || res.data?.image || null;
+
+      if (!uploadedImageUrl) {
+        toast.error("Upload failed. Try again.");
+        return;
+      }
+
       setImage(file); // display filename
-      setImageUrl(res.image); // display Cloudinary image
+      setImageUrl(uploadedImageUrl); // store Cloudinary URL for submit
       toast.success(res.message || "Image uploaded successfully");
     } catch (error) {
+      console.error(error);
       toast.error(error?.data?.message || error.error || "Image upload failed");
     }
   };
@@ -59,7 +68,7 @@ const ProductList = () => {
         quantity: Number(quantity),
         brand,
         countInStock: Number(stock),
-        image: imageUrl, // Cloudinary URL
+        image: imageUrl,
       };
 
       const { data } = await createProduct(productData);
@@ -68,7 +77,7 @@ const ProductList = () => {
         toast.error("Product creation failed. Try again.");
       } else {
         toast.success(`${data.name} is created`);
-        navigate("/");
+        navigate("/"); // redirect after creation
       }
     } catch (error) {
       console.error(error);
@@ -108,10 +117,11 @@ const ProductList = () => {
             </label>
           </div>
 
+          {/* Form Inputs */}
           <div className="p-3">
             <div className="flex flex-wrap">
               <div className="one">
-                <label htmlFor="name">Name</label> <br />
+                <label>Name</label> <br />
                 <input
                   type="text"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -120,7 +130,7 @@ const ProductList = () => {
                 />
               </div>
               <div className="two ml-10">
-                <label htmlFor="price">Price</label> <br />
+                <label>Price</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -132,7 +142,7 @@ const ProductList = () => {
 
             <div className="flex flex-wrap">
               <div className="one">
-                <label htmlFor="quantity">Quantity</label> <br />
+                <label>Quantity</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -141,7 +151,7 @@ const ProductList = () => {
                 />
               </div>
               <div className="two ml-10">
-                <label htmlFor="brand">Brand</label> <br />
+                <label>Brand</label> <br />
                 <input
                   type="text"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -151,19 +161,17 @@ const ProductList = () => {
               </div>
             </div>
 
-            <label htmlFor="description" className="my-5 block">
-              Description
-            </label>
+            <label className="my-5 block">Description</label>
             <textarea
               type="text"
               className="p-2 mb-3 bg-[#101011] border rounded-lg w-[95%] text-white"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-            ></textarea>
+            />
 
             <div className="flex justify-between flex-wrap">
               <div>
-                <label htmlFor="stock">Count In Stock</label> <br />
+                <label>Count In Stock</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -173,7 +181,7 @@ const ProductList = () => {
               </div>
 
               <div>
-                <label htmlFor="category">Category</label> <br />
+                <label>Category</label> <br />
                 <select
                   value={category}
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -182,7 +190,6 @@ const ProductList = () => {
                   <option value="" disabled hidden>
                     Select Category
                   </option>
-
                   {categories?.map((c) => (
                     <option key={c._id} value={c._id}>
                       {c.name}
