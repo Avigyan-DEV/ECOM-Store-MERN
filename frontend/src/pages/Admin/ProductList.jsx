@@ -9,8 +9,7 @@ import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
 
 const ProductList = () => {
-  const [image, setImage] = useState(null); // filename display
-  const [imageUrl, setImageUrl] = useState(""); // Cloudinary URL
+  const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -18,68 +17,52 @@ const ProductList = () => {
   const [quantity, setQuantity] = useState("");
   const [brand, setBrand] = useState("");
   const [stock, setStock] = useState(0);
-
+  const [imageUrl, setImageUrl] = useState(null);
   const navigate = useNavigate();
+
   const [uploadProductImage] = useUploadProductImageMutation();
   const [createProduct] = useCreateProductMutation();
   const { data: categories } = useFetchCategoriesQuery();
 
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const res = await uploadProductImage(formData).unwrap();
-
-      const uploadedImageUrl = res?.image || res?.data?.image || null;
-
-      if (!uploadedImageUrl) {
-        toast.error(res?.message || "Upload failed. Try again.");
-        return;
-      }
-
-      setImage(file);
-      setImageUrl(uploadedImageUrl);
-      toast.success(res.message || "Image uploaded successfully");
-    } catch (error) {
-      console.error("Image upload error:", error);
-      toast.error(
-        error?.data?.message || error?.error || "Image upload failed"
-      );
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!image) {
-      toast.error("Please upload an image first");
-      return;
-    }
-
     try {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("description", description);
-      formData.append("price", price);
-      formData.append("category", category);
-      formData.append("quantity", quantity);
-      formData.append("brand", brand);
-      formData.append("countInStock", stock);
-      formData.append("image", image); // <-- Send actual File object
+      const productData = new FormData();
+      productData.append("image", image);
+      productData.append("name", name);
+      productData.append("description", description);
+      productData.append("price", price);
+      productData.append("category", category);
+      productData.append("quantity", quantity);
+      productData.append("brand", brand);
+      productData.append("countInStock", stock);
 
-      const result = await createProduct(formData).unwrap();
+      const { data } = await createProduct(productData);
 
-      toast.success(`${result.name} is created`);
-      navigate("/");
+      if (data.error) {
+        toast.error("Product create failed. Try Again.");
+      } else {
+        toast.success(`${data.name} is created`);
+        navigate("/");
+      }
     } catch (error) {
       console.error(error);
-      toast.error(
-        error?.data?.message || "Product creation failed. Try again."
-      );
+      toast.error("Product create failed. Try Again.");
+    }
+  };
+
+  const uploadFileHandler = async (e) => {
+    const formData = new FormData();
+    formData.append("image", e.target.files[0]);
+
+    try {
+      const res = await uploadProductImage(formData).unwrap();
+      toast.success(res.message);
+      setImage(res.image);
+      setImageUrl(res.image);
+    } catch (error) {
+      toast.error(error?.data?.message || error.error);
     }
   };
 
@@ -88,38 +71,36 @@ const ProductList = () => {
       <div className="flex flex-col md:flex-row">
         <AdminMenu />
         <div className="md:w-3/4 p-3">
-          <div className="h-12 text-2xl font-semibold mb-4">Create Product</div>
+          <div className="h-12">Create Product</div>
 
-          {/* Preview Uploaded Image */}
           {imageUrl && (
-            <div className="text-center mb-5">
+            <div className="text-center">
               <img
                 src={imageUrl}
                 alt="product"
-                className="block mx-auto max-h-[200px] rounded-lg object-cover"
+                className="block mx-auto max-h-[200px]"
               />
             </div>
           )}
 
-          {/* Image Upload */}
           <div className="mb-3">
             <label className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
               {image ? image.name : "Upload Image"}
+
               <input
                 type="file"
                 name="image"
                 accept="image/*"
                 onChange={uploadFileHandler}
-                className="hidden"
+                className={!image ? "hidden" : "text-white"}
               />
             </label>
           </div>
 
-          {/* Form Inputs */}
           <div className="p-3">
             <div className="flex flex-wrap">
               <div className="one">
-                <label>Name</label> <br />
+                <label htmlFor="name">Name</label> <br />
                 <input
                   type="text"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -127,8 +108,8 @@ const ProductList = () => {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className="two ml-10">
-                <label>Price</label> <br />
+              <div className="two ml-10 ">
+                <label htmlFor="name block">Price</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -137,10 +118,9 @@ const ProductList = () => {
                 />
               </div>
             </div>
-
             <div className="flex flex-wrap">
               <div className="one">
-                <label>Quantity</label> <br />
+                <label htmlFor="name block">Quantity</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -148,8 +128,8 @@ const ProductList = () => {
                   onChange={(e) => setQuantity(e.target.value)}
                 />
               </div>
-              <div className="two ml-10">
-                <label>Brand</label> <br />
+              <div className="two ml-10 ">
+                <label htmlFor="name block">Brand</label> <br />
                 <input
                   type="text"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
@@ -159,19 +139,21 @@ const ProductList = () => {
               </div>
             </div>
 
-            <label className="my-5 block">Description</label>
+            <label htmlFor="" className="my-5">
+              Description
+            </label>
             <textarea
               type="text"
               className="p-2 mb-3 bg-[#101011] border rounded-lg w-[95%] text-white"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-            />
+            ></textarea>
 
-            <div className="flex justify-between flex-wrap">
+            <div className="flex justify-between">
               <div>
-                <label>Count In Stock</label> <br />
+                <label htmlFor="name block">Count In Stock</label> <br />
                 <input
-                  type="number"
+                  type="text"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
                   value={stock}
                   onChange={(e) => setStock(e.target.value)}
@@ -179,15 +161,12 @@ const ProductList = () => {
               </div>
 
               <div>
-                <label>Category</label> <br />
+                <label htmlFor="">Category</label> <br />
                 <select
-                  value={category}
+                  placeholder="Choose Category"
                   className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value="" disabled hidden>
-                    Select Category
-                  </option>
                   {categories?.map((c) => (
                     <option key={c._id} value={c._id}>
                       {c.name}
