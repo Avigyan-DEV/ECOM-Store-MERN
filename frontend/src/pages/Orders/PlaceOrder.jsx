@@ -76,7 +76,7 @@ const PlaceOrder = () => {
                       <Link to={`/product/${item.product}`} className="text-pink-500 hover:underline">{item.name}</Link>
                     </td>
                     <td className="p-2">{item.qty}</td>
-                    <td className="p-2">${item.price.toFixed(2)}</td>
+                    <td className="p-2">₹{item.price.toFixed(2)}</td>
                     <td className="p-2">
                       ${(item.qty * item.price).toFixed(2)}
                     </td>
@@ -92,19 +92,19 @@ const PlaceOrder = () => {
           <div className="flex justify-between flex-wrap p-8 bg-[#181818]">
             <ul className="text-lg mb-4">
               <li>
-                <span className="font-semibold">Items:</span> $
+                <span className="font-semibold">Items:</span> ₹
                 {cart.itemsPrice}
               </li>
               <li>
-                <span className="font-semibold">Shipping:</span> $
+                <span className="font-semibold">Shipping:</span> ₹
                 {cart.shippingPrice}
               </li>
               <li>
-                <span className="font-semibold">Tax:</span> $
+                <span className="font-semibold">Tax:</span> ₹
                 {cart.taxPrice}
               </li>
               <li>
-                <span className="font-semibold">Total:</span> $
+                <span className="font-semibold">Total:</span> ₹
                 {cart.totalPrice}
               </li>
             </ul>

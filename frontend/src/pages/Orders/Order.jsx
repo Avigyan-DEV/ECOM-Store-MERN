@@ -126,9 +126,9 @@ const Order = () => {
                       </td>
 
                       <td className="p-2 text-center">{item.qty}</td>
-                      <td className="p-2 text-center">${item.price}</td>
+                      <td className="p-2 text-center">₹{item.price}</td>
                       <td className="p-2 text-center">
-                        ${(item.qty * item.price).toFixed(2)}
+                        ₹{(item.qty * item.price).toFixed(2)}
                       </td>
                     </tr>
                   ))}
@@ -176,19 +176,19 @@ const Order = () => {
         <h2 className="text-xl font-bold mb-2 mt-4">Order Summary</h2>
         <div className="flex justify-between mb-2">
           <span>Items</span>
-          <span>${order.itemsPrice}</span>
+          <span>₹{order.itemsPrice}</span>
         </div>
         <div className="flex justify-between mb-2">
           <span>Shipping</span>
-          <span>${order.shippingPrice}</span>
+          <span>₹{order.shippingPrice}</span>
         </div>
         <div className="flex justify-between mb-2">
           <span>Tax</span>
-          <span>${order.taxPrice}</span>
+          <span>₹{order.taxPrice}</span>
         </div>
         <div className="flex justify-between mb-4 font-bold">
           <span>Total</span>
-          <span>${order.totalPrice}</span>
+          <span>₹{order.totalPrice}</span>
         </div>
 
         {!order.isPaid && (
