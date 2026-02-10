@@ -34,4 +34,5 @@ const CategoryForm = ({
     </div>
   );
 };
+
 export default CategoryForm;

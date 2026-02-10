@@ -37,7 +37,7 @@ const Order = () => {
 
   useEffect(() => {
     if (!errorPayPal && !loadingPayPal && paypal?.clientId) {
-      const loadPaypalScript = async () => {
+      const loadingPaypalScript = async () => {
         paypalDispatch({
           type: "resetOptions",
           value: {
@@ -48,46 +48,50 @@ const Order = () => {
         paypalDispatch({ type: "setLoadingStatus", value: "pending" });
       };
 
-      if (order && !order.isPaid && !window.paypal) {
-        loadPaypalScript();
+      if (order && !order.isPaid) {
+        if (!window.paypal) {
+          loadingPaypalScript();
+        }
       }
     }
   }, [errorPayPal, loadingPayPal, order, paypal, paypalDispatch]);
 
-  const onApprove = async (data, actions) => {
-    return actions.order.capture().then(async (details) => {
+  function onApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
       try {
         await payOrder({ orderId, details });
         refetch();
         toast.success("Order is paid");
-      } catch (err) {
-        toast.error(err?.data?.message || err.message);
+      } catch (error) {
+        toast.error(error?.data?.message || error.message);
       }
     });
-  };
+  }
 
-  const createOrder = (data, actions) => {
+  function createOrder(data, actions) {
     return actions.order
       .create({
         purchase_units: [{ amount: { value: order.totalPrice } }],
       })
-      .then((orderID) => orderID);
-  };
+      .then((orderID) => {
+        return orderID;
+      });
+  }
 
-  const onError = (err) => toast.error(err.message);
+  function onError(err) {
+    toast.error(err.message);
+  }
 
   const deliverHandler = async () => {
     await deliverOrder(orderId);
     refetch();
   };
 
-  if (isLoading) return <Loader />;
-  if (error)
-    return (
-      <Message variant="danger">{error?.data?.message || error.error}</Message>
-    );
-
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : error ? (
+    <Message variant="danger">{error.data.message}</Message>
+  ) : (
     <div className="container flex flex-col md:flex-row ml-4 md:ml-40">
       <div className="md:w-2/3 pr-4">
         <div className="border-gray-300 mt-5 pb-4 mb-5">
@@ -105,24 +109,22 @@ const Order = () => {
                     <th className="p-2 text-center">Total</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {order.orderItems.map((item, index) => (
                     <tr key={index} className="border-b">
                       <td className="p-2">
                         <img
-                          src={item.image} // ✅ Use full Cloudinary URL
+                          src={item.image}
                           alt={item.name}
                           className="w-16 h-16 object-cover"
                         />
                       </td>
+
                       <td className="p-2">
-                        <Link
-                          to={`/product/${item.product}`}
-                          className="text-pink-500 hover:underline"
-                        >
-                          {item.name}
-                        </Link>
+                        <Link to={`/product/${item.product}`} className="text-pink-500 hover:underline">{item.name}</Link>
                       </td>
+
                       <td className="p-2 text-center">{item.qty}</td>
                       <td className="p-2 text-center">${item.price}</td>
                       <td className="p-2 text-center">
@@ -143,18 +145,22 @@ const Order = () => {
           <p className="mb-2">
             <strong className="text-pink-500">Order:</strong> {order._id}
           </p>
+
           <p className="mb-2">
             <strong className="text-pink-500">Name:</strong>{" "}
             {order.user.username}
           </p>
+
           <p className="mb-2">
             <strong className="text-pink-500">Email:</strong> {order.user.email}
           </p>
+
           <p className="mb-2">
             <strong className="text-pink-500">Address:</strong>{" "}
-            {order.shippingAddress.address}, {order.shippingAddress.city},{" "}
+            {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
             {order.shippingAddress.postalCode}, {order.shippingAddress.country}
           </p>
+
           <p className="mb-2">
             <strong className="text-pink-500">Method:</strong>{" "}
             {order.paymentMethod}
@@ -187,28 +193,34 @@ const Order = () => {
 
         {!order.isPaid && (
           <div>
-            {loadingPay && <Loader />}
+            {loadingPay && <Loader />}{" "}
             {isPending ? (
               <Loader />
             ) : (
-              <PayPalButtons
-                createOrder={createOrder}
-                onApprove={onApprove}
-                onError={onError}
-              />
+              <div>
+                <div>
+                  <PayPalButtons
+                    createOrder={createOrder}
+                    onApprove={onApprove}
+                    onError={onError}
+                  ></PayPalButtons>
+                </div>
+              </div>
             )}
           </div>
         )}
 
         {loadingDeliver && <Loader />}
-        {userInfo?.isAdmin && order.isPaid && !order.isDelivered && (
-          <button
-            type="button"
-            className="bg-pink-500 text-white w-full py-2 mt-2"
-            onClick={deliverHandler}
-          >
-            Mark As Delivered
-          </button>
+        {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+          <div>
+            <button
+              type="button"
+              className="bg-pink-500 text-white w-full py-2"
+              onClick={deliverHandler}
+            >
+              Mark As Delivered
+            </button>
+          </div>
         )}
       </div>
     </div>

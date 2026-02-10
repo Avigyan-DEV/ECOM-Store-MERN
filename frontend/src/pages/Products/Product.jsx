@@ -6,7 +6,7 @@ const Product = ({ product }) => {
     <div className="w-120 ml-8 p-3 relative">
       <div className="relative">
         <img
-          src={product.image} // ✅ Cloudinary URL is full
+          src={product.image}
           alt={product.name}
           className="w-120 rounded"
         />

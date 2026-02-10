@@ -26,6 +26,7 @@ const ProductTabs = ({
   const handleTabClick = (tabNumber) => {
     setActiveTab(tabNumber);
   };
+
   return (
     <div className="flex flex-col md:flex-row">
       <section className="mr-20">
@@ -54,6 +55,7 @@ const ProductTabs = ({
           Related Products
         </div>
       </section>
+
       {/* Second Part */}
       <section>
         {activeTab === 1 && (
@@ -111,6 +113,7 @@ const ProductTabs = ({
           </div>
         )}
       </section>
+
       <section>
         {activeTab === 2 && (
           <>
@@ -137,6 +140,7 @@ const ProductTabs = ({
           </>
         )}
       </section>
+
       <section>
         {activeTab === 3 && (
           <section className="ml-16 flex flex-wrap">

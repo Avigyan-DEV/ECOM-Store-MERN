@@ -11,7 +11,7 @@ const ProductCard = ({ p }) => {
   const addToCartHandler = (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
     toast.success("Item added successfully", {
-      position: "top-right",
+      position: toast.POSITION.TOP_RIGHT,
       autoClose: 2000,
     });
   };
@@ -25,7 +25,7 @@ const ProductCard = ({ p }) => {
           </span>
           <img
             className="cursor-pointer w-full"
-            src={p.image} // ✅ Use full Cloudinary URL
+            src={p.image}
             alt={p.name}
             style={{ height: "170px", objectFit: "cover" }}
           />

@@ -16,6 +16,7 @@ const Shop = () => {
   const { categories, products, checked, radio } = useSelector(
     (state) => state.shop
   );
+
   const categoriesQuery = useFetchCategoriesQuery();
   const [priceFilter, setPriceFilter] = useState("");
 
@@ -78,6 +79,7 @@ const Shop = () => {
     // Update the price filter state when the user types in the input field
     setPriceFilter(e.target.value);
   };
+
   return (
     <>
       <div className="container mx-auto">
@@ -179,4 +181,5 @@ const Shop = () => {
     </>
   );
 };
+
 export default Shop;

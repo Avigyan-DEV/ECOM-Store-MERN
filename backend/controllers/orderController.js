@@ -7,9 +7,11 @@ function calcPrices(orderItems) {
     (acc, item) => acc + item.price * item.qty,
     0
   );
+
   const shippingPrice = itemsPrice > 100 ? 0 : 10;
   const taxRate = 0.15;
   const taxPrice = (itemsPrice * taxRate).toFixed(2);
+
   const totalPrice = (
     itemsPrice +
     shippingPrice +
@@ -44,7 +46,7 @@ const createOrder = async (req, res) => {
 
       if (!matchingItemFromDB) {
         res.status(404);
-        throw new Error(`Product not found" ${itemFromClient._id}`);
+        throw new Error(`Product not found: ${itemFromClient._id}`);
       }
 
       return {

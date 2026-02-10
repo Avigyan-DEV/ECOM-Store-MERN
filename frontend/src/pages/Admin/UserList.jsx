@@ -1,23 +1,25 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaTrash, FaEdit, FaCheck, FaTimes } from "react-icons/fa";
-import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 import {
-  useGetUsersQuery,
   useDeleteUserMutation,
+  useGetUsersQuery,
   useUpdateUserMutation,
 } from "../../redux/api/usersApiSlice";
+import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
 
 const UserList = () => {
   const { data: users, refetch, isLoading, error } = useGetUsersQuery();
+
   const [deleteUser] = useDeleteUserMutation();
-  const [updateUser] = useUpdateUserMutation();
 
   const [editableUserId, setEditableUserId] = useState(null);
-  const [editableUsername, setEditableUsername] = useState("");
+  const [editableUserName, setEditableUserName] = useState("");
   const [editableUserEmail, setEditableUserEmail] = useState("");
+
+  const [updateUser] = useUpdateUserMutation();
 
   useEffect(() => {
     refetch();
@@ -28,15 +30,15 @@ const UserList = () => {
       try {
         await deleteUser(id);
         refetch();
-      } catch (error) {
-        toast.error(error.data.message || error.error);
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
       }
     }
   };
 
   const toggleEdit = (id, username, email) => {
     setEditableUserId(id);
-    setEditableUsername(username);
+    setEditableUserName(username);
     setEditableUserEmail(email);
   };
 
@@ -44,25 +46,24 @@ const UserList = () => {
     try {
       await updateUser({
         userId: id,
-        username: editableUsername,
+        username: editableUserName,
         email: editableUserEmail,
       });
-
       setEditableUserId(null);
       refetch();
-    } catch (error) {
-      toast.error(error.data.message || error.error);
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
     }
   };
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-4 ml-43">Users</h1>
+      <h1 className="text-2xl font-semibold mb-4">Users</h1>
       {isLoading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">
-          {error?.data.message || error.message}
+          {error?.data?.message || error.error}
         </Message>
       ) : (
         <div className="flex flex-col md:flex-row">
@@ -74,6 +75,7 @@ const UserList = () => {
                 <th className="px-4 py-2 text-left">NAME</th>
                 <th className="px-4 py-2 text-left">EMAIL</th>
                 <th className="px-4 py-2 text-left">ADMIN</th>
+                <th className="px-4 py-2"></th>
               </tr>
             </thead>
             <tbody>
@@ -85,8 +87,8 @@ const UserList = () => {
                       <div className="flex items-center">
                         <input
                           type="text"
-                          value={editableUsername}
-                          onChange={(e) => setEditableUsername(e.target.value)}
+                          value={editableUserName}
+                          onChange={(e) => setEditableUserName(e.target.value)}
                           className="w-full p-2 border rounded-lg"
                         />
                         <button
@@ -99,13 +101,16 @@ const UserList = () => {
                     ) : (
                       <div className="flex items-center">
                         {user.username}{" "}
-                        <button
+                        {user.isAdmin ? (<></>) : (
+                          <button
                           onClick={() =>
                             toggleEdit(user._id, user.username, user.email)
                           }
                         >
                           <FaEdit className="ml-4" />
                         </button>
+                      )}
+                        
                       </div>
                     )}
                   </td>
@@ -127,14 +132,17 @@ const UserList = () => {
                       </div>
                     ) : (
                       <div className="flex items-center">
-                        <p>{user.email}</p>
-                        <button
+                        <a href={`mailto:${user.email}`}>{user.email}</a>{" "}
+                        {user.isAdmin ? (<></>) : (
+                          <button
                           onClick={() =>
-                            toggleEdit(user._id, user.username, user.email)
+                            toggleEdit(user._id, user.name, user.email)
                           }
                         >
                           <FaEdit className="ml-4" />
                         </button>
+                      )}
+                        
                       </div>
                     )}
                   </td>
@@ -166,4 +174,5 @@ const UserList = () => {
     </div>
   );
 };
+
 export default UserList;

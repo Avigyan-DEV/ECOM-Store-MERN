@@ -71,6 +71,7 @@ const Navigation = () => {
             <AiOutlineShoppingCart className="mt-12 mr-2" size={26} />
             <span className="hidden nav-item-name mt-12">Cart</span>{" "}
           </div>
+
           <div className="absolute top-9">
             {cartItems.length > 0 && (
               <span>
@@ -192,7 +193,7 @@ const Navigation = () => {
             <li>
               <Link
                 to="/login"
-                className="flex items-center mt-5 transition-transform transform hover:translate-x-2"
+                className="flex items-center mt-5 transition-transform transform hover:translate-x-2 hover:text-pink-700"
               >
                 <AiOutlineLogin className="mr-2 mt-1" size={26} />
                 <span className="hidden nav-item-name">LOGIN</span>
@@ -201,7 +202,7 @@ const Navigation = () => {
             <li>
               <Link
                 to="/register"
-                className="flex items-center mt-5 transition-transform transform hover:translate-x-2"
+                className="flex items-center mt-5 transition-transform transform hover:translate-x-2 hover:text-pink-700"
               >
                 <AiOutlineUserAdd size={26} />
                 <span className="hidden nav-item-name">REGISTER</span>

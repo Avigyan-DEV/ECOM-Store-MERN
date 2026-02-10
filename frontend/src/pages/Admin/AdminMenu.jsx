@@ -4,6 +4,7 @@ import { FaTimes } from "react-icons/fa";
 
 const AdminMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -102,4 +103,5 @@ const AdminMenu = () => {
     </>
   );
 };
+
 export default AdminMenu;

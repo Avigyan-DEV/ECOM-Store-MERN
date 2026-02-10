@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
+import { useRegisterMutation } from "../../redux/api/usersApiSlice";
 import { setCredentials } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
-import { useRegisterMutation } from "../../redux/api/usersApiSlice";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -16,6 +16,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const [register, { isLoading }] = useRegisterMutation();
+
   const { userInfo } = useSelector((state) => state.auth);
 
   const { search } = useLocation();
@@ -30,17 +31,18 @@ const Register = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
-      toast.error(`Passwords do not match`);
+      toast.error("Passwords do not match");
     } else {
       try {
         const res = await register({ username, email, password }).unwrap();
         dispatch(setCredentials({ ...res }));
         navigate(redirect);
-        toast.success(`User successfully created`);
-      } catch (error) {
-        console.log(error);
-        toast.error(error.data.message);
+        toast.success("User successfully registered");
+      } catch (err) {
+        console.log(err);
+        toast.error(err.data.message);
       }
     }
   };
@@ -62,11 +64,12 @@ const Register = () => {
               type="text"
               id="name"
               className="mt-1 p-2 border rounded w-full"
-              pla
+              placeholder="Enter name"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
+
           <div className="my-8">
             <label
               htmlFor="email"
@@ -78,36 +81,41 @@ const Register = () => {
               type="email"
               id="email"
               className="mt-1 p-2 border rounded w-full"
+              placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+
           <div className="my-8">
             <label
               htmlFor="password"
               className="block text-sm font-medium text-white"
             >
-              Enter password
+              Password
             </label>
             <input
               type="password"
               id="password"
               className="mt-1 p-2 border rounded w-full"
+              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <div className="my-8">
             <label
               htmlFor="confirmPassword"
               className="block text-sm font-medium text-white"
             >
-              Confirm password
+              Confirm Password
             </label>
             <input
               type="password"
               id="confirmPassword"
               className="mt-1 p-2 border rounded w-full"
+              placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
@@ -144,4 +152,5 @@ const Register = () => {
     </section>
   );
 };
+
 export default Register;

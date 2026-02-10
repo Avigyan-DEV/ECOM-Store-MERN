@@ -21,6 +21,7 @@ const Cart = () => {
   const checkoutHandler = () => {
     navigate("/login?redirect=/shipping");
   };
+
   return (
     <>
       <div className="container flex justify-around items-start wrap mx-auto mt-8">
@@ -40,7 +41,7 @@ const Cart = () => {
                 <div key={item._id} className="flex items-center mb-4 pb-2">
                   <div className="w-20 h-20">
                     <img
-                      src={item.image} // Cloudinary URL is already full URL
+                      src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover rounded"
                     />
@@ -66,11 +67,7 @@ const Cart = () => {
                       }
                     >
                       {[...Array(item.countInStock).keys()].map((x) => (
-                        <option
-                          key={x + 1}
-                          value={x + 1}
-                          className="text-black"
-                        >
+                        <option key={x + 1} value={x + 1}>
                           {x + 1}
                         </option>
                       ))}
@@ -81,7 +78,6 @@ const Cart = () => {
                     <button
                       className="text-red-500 mr-20"
                       onClick={() => removeFromCartHandler(item._id)}
-                      aria-label={`Remove ${item.name} from cart`}
                     >
                       <FaTrash className="ml-4 mt-2" />
                     </button>
@@ -118,4 +114,5 @@ const Cart = () => {
     </>
   );
 };
+
 export default Cart;

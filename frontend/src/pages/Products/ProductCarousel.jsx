@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 
 const ProductCarousel = () => {
-  const { data: products = [], isLoading, error } = useGetTopProductsQuery();
+  const { data: products, isLoading, error } = useGetTopProductsQuery();
 
   const settings = {
     dots: false,
@@ -27,10 +27,10 @@ const ProductCarousel = () => {
   };
 
   return (
-    <div className="mb-4 xl:block lg:block md:block">
+    <div className="mb-4 lg:block xl:block md:block">
       {isLoading ? null : error ? (
         <Message variant="danger">
-          {error?.data?.message || error.message}
+          {error?.data?.message || error.error}
         </Message>
       ) : (
         <Slider
@@ -53,7 +53,7 @@ const ProductCarousel = () => {
             }) => (
               <div key={_id}>
                 <img
-                  src={image} // ✅ Use full Cloudinary URL
+                  src={image}
                   alt={name}
                   className="w-full rounded-lg object-cover h-120"
                 />
@@ -61,9 +61,10 @@ const ProductCarousel = () => {
                 <div className="flex justify-between w-[20rem]">
                   <div className="one">
                     <h2>{name}</h2>
-                    <p>$ {price}</p>
-                    <br />
-                    <p className="w-100">{description?.substring(0, 170)}...</p>
+                    <p> $ {price}</p> <br /> <br />
+                    <p className="w-100">
+                      {description.substring(0, 170)} ...
+                    </p>
                   </div>
 
                   <div className="flex justify-between w-[20rem]">

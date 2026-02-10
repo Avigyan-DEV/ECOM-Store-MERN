@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../components/Loader";
 import { useLoginMutation } from "../../redux/api/usersApiSlice";
 import { setCredentials } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
-import Loader from "../../components/Loader";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -37,16 +37,17 @@ const Login = () => {
         console.log(res);
         dispatch(setCredentials({ ...res }));
         toast.success(`Logged in successfully`);
-      } catch (error) {
-        toast.error(error?.data?.message || error.message);
+        navigate(redirect);
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
       }
     }
   };
 
   return (
     <div>
-      <section className="pl-40 flex flex-wrap ">
-        <div className="mr-16 mt-20 ">
+      <section className="pl-40 flex flex-wrap">
+        <div className="mr-16 mt-20">
           <h1 className="text-2xl font-semibold mb-4">Sign In</h1>
 
           <form onSubmit={submitHandler} className="container w-160">
@@ -61,10 +62,12 @@ const Login = () => {
                 type="email"
                 id="email"
                 className="mt-1 p-2 border rounded w-full"
+                placeholder="Enter email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div className="my-8">
               <label
                 htmlFor="password"
@@ -76,6 +79,7 @@ const Login = () => {
                 type="password"
                 id="password"
                 className="mt-1 p-2 border rounded w-full"
+                placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -84,10 +88,11 @@ const Login = () => {
             <button
               disabled={isLoading}
               type="submit"
-              className="bg-pink-500 text-white px-4 py-2 rounded cursor:pointer my-4"
+              className="bg-pink-500 text-white px-4 py-2 rounded cursor-pointer my-4"
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </button>
+
             {isLoading && <Loader />}
           </form>
 
@@ -112,4 +117,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

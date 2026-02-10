@@ -66,7 +66,6 @@ const AdminDashboard = () => {
   });
 
   useEffect(() => {
-    // Format the data from salesDetails to match the chart's requirement
     if (salesDetail) {
       const formattedSalesDate = salesDetail.map((item) => ({
         x: item._id,

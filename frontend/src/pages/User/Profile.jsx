@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+
 import Loader from "../../components/Loader";
+import { useProfileMutation } from "../../redux/api/usersApiSlice";
 import { setCredentials } from "../../redux/features/auth/authSlice";
 import { Link } from "react-router-dom";
-import { useProfileMutation } from "../../redux/api/usersApiSlice";
 
 const Profile = () => {
-  const [username, setUsername] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,7 +19,7 @@ const Profile = () => {
     useProfileMutation();
 
   useEffect(() => {
-    setUsername(userInfo.username);
+    setUserName(userInfo.username);
     setEmail(userInfo.email);
   }, [userInfo.email, userInfo.username]);
 
@@ -38,8 +39,8 @@ const Profile = () => {
         }).unwrap();
         dispatch(setCredentials({ ...res }));
         toast.success("Profile updated successfully");
-      } catch (error) {
-        toast.error(error?.data?.message || error.message);
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
       }
     }
   };
@@ -49,43 +50,45 @@ const Profile = () => {
       <div className="flex justify-center align-center md:flex md:space-x-4">
         <div className="md:w-1/3">
           <h2 className="text-2xl font-semibold mb-4">Update Profile</h2>
-
           <form onSubmit={submitHandler}>
             <div className="mb-4">
               <label className="block text-white mb-2">Name</label>
               <input
                 type="text"
-                placeholder="Update Name"
+                placeholder="Enter name"
                 className="form-input p-4 rounded-sm w-full bg-gray-800"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setUserName(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
-              <label className="block text-white mb-2">Email</label>
+              <label className="block text-white mb-2">Email Address</label>
               <input
                 type="email"
-                placeholder="Update Email"
+                placeholder="Enter email"
                 className="form-input p-4 rounded-sm w-full bg-gray-800"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
               <label className="block text-white mb-2">Password</label>
               <input
                 type="password"
-                placeholder="Update Password"
+                placeholder="Enter password"
                 className="form-input p-4 rounded-sm w-full bg-gray-800"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
               <label className="block text-white mb-2">Confirm Password</label>
               <input
                 type="password"
-                placeholder="Confirm Password"
+                placeholder="Confirm password"
                 className="form-input p-4 rounded-sm w-full bg-gray-800"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -107,12 +110,12 @@ const Profile = () => {
                 My Orders
               </Link>
             </div>
+            {loadingUpdateProfile && <Loader />}
           </form>
         </div>
-
-        {loadingUpdateProfile && <Loader />}
       </div>
     </div>
   );
 };
+
 export default Profile;

@@ -9,9 +9,6 @@ import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
 
 const ProductList = () => {
-  const [image, setImage] = useState("");        // Cloudinary URL
-  const [rawImage, setRawImage] = useState(null); // Selected file
-
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -20,21 +17,33 @@ const ProductList = () => {
   const [brand, setBrand] = useState("");
   const [stock, setStock] = useState(0);
 
-  const [imageUrl, setImageUrl] = useState(null);
+  // ✅ Cloudinary image URL only
+  const [imageUrl, setImageUrl] = useState("");
+
   const navigate = useNavigate();
 
   const [uploadProductImage] = useUploadProductImageMutation();
   const [createProduct] = useCreateProductMutation();
   const { data: categories } = useFetchCategoriesQuery();
 
-  // -------------------------
-  // Upload Image Handler
-  // -------------------------
+  /* =========================
+     IMAGE UPLOAD HANDLER
+  ========================= */
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
+
     if (!file) return;
 
-    setRawImage(file); // Store selected file so we can display name
+    // Optional frontend validation
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only image files are allowed");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size must be under 5MB");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("image", file);
@@ -42,23 +51,25 @@ const ProductList = () => {
     try {
       const res = await uploadProductImage(formData).unwrap();
       toast.success(res.message);
-
-      setImage(res.image);    // Cloudinary URL
-      setImageUrl(res.image); // Image preview
+      setImageUrl(res.image); // ✅ Cloudinary URL
     } catch (error) {
       toast.error(error?.data?.message || error.error);
     }
   };
 
-  // -------------------------
-  // Submit Product Handler
-  // -------------------------
+  /* =========================
+     CREATE PRODUCT HANDLER
+  ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!imageUrl) {
+      toast.error("Please upload an image first");
+      return;
+    }
+
     try {
       const productData = {
-        image, // Cloudinary URL sent as string
         name,
         description,
         price,
@@ -66,17 +77,20 @@ const ProductList = () => {
         quantity,
         brand,
         countInStock: stock,
+        image: imageUrl, // ✅ Cloudinary URL
       };
 
-      const res = await createProduct(productData).unwrap();
+      const { data } = await createProduct(productData);
 
-      toast.success(`${res.name} is created`);
-      navigate("/");
+      if (data?.error) {
+        toast.error("Product create failed. Try again.");
+      } else {
+        toast.success(`${data.name} is created`);
+        navigate("/");
+      }
     } catch (error) {
       console.error(error);
-      toast.error(
-        error?.data?.message || "Product create failed. Try Again."
-      );
+      toast.error("Product create failed. Try again.");
     }
   };
 
@@ -86,24 +100,23 @@ const ProductList = () => {
         <AdminMenu />
 
         <div className="md:w-3/4 p-3">
-          <div className="h-12">Create Product</div>
+          <div className="h-12 text-xl font-bold">Create Product</div>
 
-          {/* Image Preview */}
+          {/* IMAGE PREVIEW */}
           {imageUrl && (
-            <div className="text-center">
+            <div className="text-center mb-3">
               <img
                 src={imageUrl}
                 alt="product"
-                className="block mx-auto max-h-[200px]"
+                className="block mx-auto max-h-[200px] rounded"
               />
             </div>
           )}
 
-          {/* Image Upload */}
+          {/* IMAGE UPLOAD */}
           <div className="mb-3">
             <label className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
-              {rawImage ? rawImage.name : "Upload Image"}
-
+              {imageUrl ? "Image Uploaded" : "Upload Image"}
               <input
                 type="file"
                 name="image"
@@ -114,50 +127,46 @@ const ProductList = () => {
             </label>
           </div>
 
-          {/* Form Fields */}
+          {/* FORM */}
           <div className="p-3">
-            <div className="flex flex-wrap">
-              <div className="one">
+            <div className="flex flex-wrap gap-6">
+              <div>
                 <label>Name</label>
-                <br />
                 <input
                   type="text"
-                  className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
+                  className="p-4 mb-3 w-72 border rounded-lg bg-[#101011] text-white"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
 
-              <div className="two ml-10">
+              <div>
                 <label>Price</label>
-                <br />
                 <input
                   type="number"
-                  className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
+                  className="p-4 mb-3 w-72 border rounded-lg bg-[#101011] text-white"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="flex flex-wrap">
-              <div className="one">
+            <div className="flex flex-wrap gap-6">
+              <div>
                 <label>Quantity</label>
-                <br />
                 <input
                   type="number"
-                  className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
+                  className="p-4 mb-3 w-72 border rounded-lg bg-[#101011] text-white"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
                 />
               </div>
 
-              <div className="two ml-10">
+              <div>
                 <label>Brand</label>
-                <br />
                 <input
                   type="text"
-                  className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
+                  className="p-4 mb-3 w-72 border rounded-lg bg-[#101011] text-white"
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
                 />
@@ -166,18 +175,17 @@ const ProductList = () => {
 
             <label>Description</label>
             <textarea
-              className="p-2 mb-3 bg-[#101011] border rounded-lg w-[95%] text-white"
+              className="p-3 mb-3 bg-[#101011] border rounded-lg w-[95%] text-white"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-6">
               <div>
                 <label>Count In Stock</label>
-                <br />
                 <input
                   type="number"
-                  className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
+                  className="p-4 mb-3 w-72 border rounded-lg bg-[#101011] text-white"
                   value={stock}
                   onChange={(e) => setStock(e.target.value)}
                 />
@@ -185,12 +193,13 @@ const ProductList = () => {
 
               <div>
                 <label>Category</label>
-                <br />
                 <select
-                  className="p-4 mb-3 w-120 border rounded-lg bg-[#101011] text-white"
+                  className="p-4 mb-3 w-72 border rounded-lg bg-[#101011] text-white"
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value="">Select Category</option>
+                  <option value="" hidden>
+                    Select Category
+                  </option>
                   {categories?.map((c) => (
                     <option key={c._id} value={c._id}>
                       {c.name}

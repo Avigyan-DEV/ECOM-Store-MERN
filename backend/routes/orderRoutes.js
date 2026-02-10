@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { authenticate, authorizeAdmin } from "../middlewares/authMiddleware.js";
+
 import {
   createOrder,
   getAllOrders,
@@ -13,10 +13,13 @@ import {
   markOrderAsDelivered,
 } from "../controllers/orderController.js";
 
+import { authenticate, authorizeAdmin } from "../middlewares/authMiddleware.js";
+
 router
   .route("/")
   .post(authenticate, createOrder)
   .get(authenticate, authorizeAdmin, getAllOrders);
+
 router.route("/mine").get(authenticate, getUserOrders);
 router.route("/total-orders").get(countTotalOrders);
 router.route("/total-sales").get(calculateTotalSales);

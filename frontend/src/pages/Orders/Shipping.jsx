@@ -22,6 +22,14 @@ const Shipping = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    dispatch(saveShippingAddress({ address, city, postalCode, country }));
+    dispatch(savePaymentMethod(paymentMethod));
+    navigate("/placeorder");
+  };
+
   // Payment
   useEffect(() => {
     if (!shippingAddress.address) {
@@ -29,12 +37,6 @@ const Shipping = () => {
     }
   }, [navigate, shippingAddress]);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(saveShippingAddress({ address, city, postalCode, country }));
-    dispatch(savePaymentMethod(paymentMethod));
-    navigate("/placeorder");
-  };
   return (
     <div className="container mx-auto mt-10">
       <ProgressSteps step1 step2 />

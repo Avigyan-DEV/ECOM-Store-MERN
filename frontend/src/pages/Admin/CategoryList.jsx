@@ -1,18 +1,18 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
 import {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
   useFetchCategoriesQuery,
 } from "../../redux/api/categoryApiSlice";
+
+import { toast } from "react-toastify";
 import CategoryForm from "../../components/CategoryForm";
 import Modal from "../../components/Modal";
 import AdminMenu from "./AdminMenu";
 
 const CategoryList = () => {
   const { data: categories, refetch } = useFetchCategoriesQuery();
-
   const [name, setName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [updatingName, setUpdatingName] = useState("");
@@ -41,7 +41,7 @@ const CategoryList = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Category creation failed, try again.");
+      toast.error("Creating category failed, try again.");
     }
   };
 
@@ -82,14 +82,14 @@ const CategoryList = () => {
       if (result.error) {
         toast.error(result.error);
       } else {
-        toast.success(`${result.name} is successfully deleted`);
+        toast.success(`${result.name} is deleted.`);
         setSelectedCategory(null);
         setModalVisible(false);
         refetch();
       }
     } catch (error) {
       console.error(error);
-      toast.error("Category deletion failed, try again.");
+      toast.error("Category delection failed. Try again.");
     }
   };
 

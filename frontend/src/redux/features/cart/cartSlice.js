@@ -49,11 +49,11 @@ const cartSlice = createSlice({
 
 export const {
   addToCart,
-  clearCartItems,
   removeFromCart,
-  resetCart,
   savePaymentMethod,
   saveShippingAddress,
+  clearCartItems,
+  resetCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

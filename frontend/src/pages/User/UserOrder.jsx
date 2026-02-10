@@ -8,7 +8,7 @@ const UserOrder = () => {
 
   return (
     <div className="container mx-auto">
-      <h2 className="text-2xl font-semibold mb-4">My Orders</h2>
+      <h2 className="text-2xl font-semibold mb-4">My Orders </h2>
 
       {isLoading ? (
         <Loader />
@@ -29,20 +29,18 @@ const UserOrder = () => {
           </thead>
 
           <tbody>
-            {orders.map((order) => (
+            {orders?.map((order) => (
               <tr key={order._id}>
                 <td className="py-2">
                   <img
-                    src={order.orderItems[0].image} // ✅ Cloudinary URL
-                    alt={order.user?.username || "order item"}
-                    className="w-24 mb-5"
+                    src={order.orderItems[0]?.image}
+                    alt="order item"
+                    className="w-24"
                   />
                 </td>
 
                 <td className="py-2">{order._id}</td>
-                <td className="py-2">
-                  {order.createdAt ? order.createdAt.substring(0, 10) : "N/A"}
-                </td>
+                <td className="py-2">{order.createdAt.substring(0, 10)}</td>
                 <td className="py-2">$ {order.totalPrice}</td>
 
                 <td className="py-2">
