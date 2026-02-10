@@ -67,7 +67,11 @@ const Cart = () => {
                       }
                     >
                       {[...Array(item.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
+                        <option
+                          key={x + 1}
+                          value={x + 1}
+                          className="text-black"
+                        >
                           {x + 1}
                         </option>
                       ))}
