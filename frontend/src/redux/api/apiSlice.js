@@ -7,4 +7,5 @@ export const apiSlice = createApi({
   baseQuery,
   tagTypes: ["Product", "Order", "User", "Category"],
   endpoints: () => ({}),
+  credentials: "include",
 });
