@@ -5,7 +5,7 @@ import {
   addToFavorites,
   removeFromFavorites,
   setFavorites,
-} from "../../redux/features/favorites/favoriteSlice";
+} from "../../redux/features/favorites/favoriteSlice.js";
 
 import {
   addFavoriteToLocalStorage,
