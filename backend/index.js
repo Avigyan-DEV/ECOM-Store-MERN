@@ -23,10 +23,10 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://ecom-store-mern-beryl.vercel.app",
+      "https://ecom-store-mern-gold.vercel.app",
     ],
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
