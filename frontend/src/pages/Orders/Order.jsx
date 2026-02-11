@@ -42,7 +42,7 @@ const Order = () => {
           type: "resetOptions",
           value: {
             "client-id": paypal.clientId,
-            currency: "USD",
+            currency: "INR",
           },
         });
         paypalDispatch({ type: "setLoadingStatus", value: "pending" });
@@ -122,7 +122,12 @@ const Order = () => {
                       </td>
 
                       <td className="p-2">
-                        <Link to={`/product/${item.product}`} className="text-pink-500 hover:underline">{item.name}</Link>
+                        <Link
+                          to={`/product/${item.product}`}
+                          className="text-pink-500 hover:underline"
+                        >
+                          {item.name}
+                        </Link>
                       </td>
 
                       <td className="p-2 text-center">{item.qty}</td>
